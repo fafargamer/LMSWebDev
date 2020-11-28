@@ -31,4 +31,6 @@ App di run di PORT 3000
 
 Routes :
 
-/
+get.'/' = home page
+post.'/upload' = upload file
+post.'/register' = register
