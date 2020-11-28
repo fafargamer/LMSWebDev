@@ -34,3 +34,4 @@ Routes :
 get.'/' = home page
 post.'/upload' = upload file
 post.'/register' = register
+get.'/get/:filename' = download file
