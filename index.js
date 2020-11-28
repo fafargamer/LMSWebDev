@@ -128,12 +128,27 @@ app.get('/', (req,res) => {
 
 app.post('/upload', upload.single('fileNameforUpload'), (req,res,next) => {
       //res.json({error_code:0,err_desc:null});
-      res.redirect('/fileMeta')
       global.originalname = req.file.filename
+      var fileName = req.body.filename
+      var dbFilename = originalname
+      var fileDesc = req.body.filedescription
+      var namaUser = "TestUser"
+      //res.redirect('/fileMeta')
+      fileSchema({filename: fileName,
+                  desc: fileDesc,
+                  namaUser: namaUser,
+                  DBfilename: dbFilename}).save(function(err, data){
+                    if(err){
+                      res.send(err)
+                    }
+                    res.send(data)
+                    console.log("succ")
+                  })
+
       console.log('succ file!')
 });
 
-app.post('/fileMeta', (req,res) => {
+app.get('/fileMeta', (req,res) => {
   var fileName = req.body.filename
   var dbFilename = originalname
   var fileDesc = req.body.filedescription
