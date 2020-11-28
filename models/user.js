@@ -1,7 +1,4 @@
-const mongoose = require('mongoose');
-
-
-const UserSchema = mongoose.Schema({
+const User = ({
     username: String,
     email: String,
     namaLengkap: String,
@@ -9,18 +6,10 @@ const UserSchema = mongoose.Schema({
     akunFacebook: String,
     akunInstagram: String,
     akunYoutube: String,
-    bio: String,
-    hash: String,
-    salt: String,
-    files: [{
-            filename: String
-        }]
-  }, 
-  {
-      timestamps: true
-    });
+    bio: String
+});
     
-module.exports = mongoose.model('User', UserSchema);
+module.exports = User;
 
 
 

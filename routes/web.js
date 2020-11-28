@@ -18,28 +18,28 @@ app.get('/', (req,res) => {
     res.render('upload');
 });
 
-app.get('/login', (req,res) => {
-    res.render('login');
-});
+// app.get('/login', (req,res) => {
+//     res.render('login');
+// });
 
-app.get('/login', (req,res) => {
-    res.render('login');
-});
+// app.get('/login', (req,res) => {
+//     res.render('login');
+// });
 
-app.post('/register2', (req,res) => {
-    var username = req.body.username
-    var password = req.body.password
-    var bio = req.body.bio
-    var saltRounds = 10;
-    bcrypt.genSalt(saltRounds, (err, salt) => {
-        bcrypt.hash(password, salt, (err, hash) => {
-            // Now we can store the password hash in db.
-        });
-    });
+// app.post('/register2', (req,res) => {
+//     var username = req.body.username
+//     var password = req.body.password
+//     var bio = req.body.bio
+//     var saltRounds = 10;
+//     bcrypt.genSalt(saltRounds, (err, salt) => {
+//         bcrypt.hash(password, salt, (err, hash) => {
+//             // Now we can store the password hash in db.
+//         });
+//     });
 
     
 
-    res.send(password)
+    // res.send(password)
 
     // if(err) throw new Error('Gagal mendapatkan username');
     // if(result){
@@ -63,23 +63,23 @@ app.post('/register2', (req,res) => {
     //     })
     // }
 
-});
+// });
 
-app.post('/uploadMeta', (req,res) =>{
-    fileData({filename: req.body.filename,
-                desc: req.body.filedescription,
-                DBfilename: "hello",
-                namaUser: "NewUser"
-              }).save(function(err, data){
-                if(err){
-                    res.send(err)
-                }
-                else{
+// app.post('/uploadMeta', (req,res) =>{
+//     fileData({filename: req.body.filename,
+//                 desc: req.body.filedescription,
+//                 DBfilename: "hello",
+//                 namaUser: "NewUser"
+//               }).save(function(err, data){
+//                 if(err){
+//                     res.send(err)
+//                 }
+//                 else{
 
-                    res.send(data);
-                }
-              })
-});
+//                     res.send(data);
+//                 }
+//               })
+// });
 
 
 module.exports = app;

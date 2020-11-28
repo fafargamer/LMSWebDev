@@ -54,7 +54,7 @@ var conn = mongo.createConnection(mongoUrl, function(err, db){
   }
 });
 
-var userSchema2 = conn.model('userSchema2', require('./models/user2.js'));
+var User = conn.model('User', require('./models/user.js'));
 var fileSchema = conn.model('fileSchema', require('./models/file.js'));
 
 
@@ -148,34 +148,49 @@ app.post('/upload', upload.single('fileNameforUpload'), (req,res,next) => {
       console.log('succ file!')
 });
 
-app.get('/fileMeta', (req,res) => {
-  var fileName = req.body.filename
-  var dbFilename = originalname
-  var fileDesc = req.body.filedescription
-  var namaUser = "TestUser"
-  fileSchema({filename: fileName,
-              desc: fileDesc,
-              namaUser: namaUser,
-              DBfilename: dbFilename}).save(function(err, data){
-                if(err){
-                  res.send(err)
-                }
-                res.send(data)
-                console.log("succ")
-              })
+app.get('/getfiles/:username', (req,res) =>{
+  fileSchema.find({namaUser: req.params.username}, (err, result) =>{
+    if(err){
+      res.send(err)
+    }else{
+      res.send(result)
+    }
+  })
+
 })
 
 app.get('/register', (req,res) =>{
-  var username = "req.body.username"
-  var password = "req.body.password"
-  userSchema2({username: username,
-              password: password}).save(function(err, data){
+  var username = req.body.username
+  var email = req.body.email
+  var namaLengkap = req.body.namaLengkap
+  var institusi = req.body.institusi
+  var akunFacebook = req.body.akunFacebook
+  var akunInstagram = req.body.akunInstagram
+  var akunYoutube = req.body.akunYoutube
+  var bio = req.body.bio
+        User({username: username,
+              email: email,
+              namaLengkap: namaLengkap,
+              institusi: institusi,
+              akunFacebook: akunFacebook,
+              akunInstagram: akunInstagram,
+              akunYoutube: akunYoutube,
+              bio: bio}).save(function(err, data){
                 if(err){
                   res.send(err)
                 }
                 res.send(data)
                 console.log("succ")
               })
+
+              // username: String,
+              // email: String,
+              // namaLengkap: String,
+              // institusi: String,
+              // akunFacebook: String,
+              // akunInstagram: String,
+              // akunYoutube: String,
+              // bio: String
 })
 
 // app.post('/upload', upload.single('fileNameforUpload'), (req, res) =>{

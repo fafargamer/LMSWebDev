@@ -34,4 +34,5 @@ Routes :
 get.'/' = home page
 post.'/upload' = upload file
 post.'/register' = register
-get.'/get/:filename' = download file
+get.'/file/:filename' = download file
+get.'/getfiles/:username' = cari semua file dengan parameter username
