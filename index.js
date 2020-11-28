@@ -8,14 +8,13 @@ const mongoUrl = 'mongodb+srv://farhanMaulana:Shermanjumbo123@cluster0.i8t2f.mon
 const path = require('path');
 var gridfs = require('gridfs-stream');
 const ejs = require('ejs')
+const bcrypt = require('bcrypt')
 const multer = require('multer')
 const GridFsStorage = require('multer-gridfs-storage');
 const Grid = require('gridfs-stream');
 const methodOverride = require('method-override')
 var Binary = require('mongodb').Binary;
 var fs = require('fs');
-const routes  = require('./routes/web.js');
-const uploadController  = require('./controller/upload.js');
 
 // const file = require('./models/file.js');
 
@@ -28,7 +27,6 @@ app.set('view engine', 'ejs');
 app.use(methodOverride('_method'))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
-app.use(routes)
 // app.use(uploadController)
 
 // var file_path = './test.txt';
@@ -53,10 +51,31 @@ var conn = mongo.createConnection(mongoUrl, function(err, db){
     // here we are going to write code for file
   }
 });
-
-var User = conn.model('User', require('./models/user.js'));
 var fileSchema = conn.model('fileSchema', require('./models/file.js'));
+var User = conn.model('User', require('./models/user.js'));
 
+
+
+
+
+// Check File Type
+// function checkFileType(file, cb){
+//   // Allowed ext
+//   const filetypes = /jpeg|jpg|png|gif|docx|pptx|ppt|doc|pdf/;
+//   // Check ext
+//   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+//   // Check mime
+//   const mimetype = filetypes.test(file.mimetype);
+//   if(mimetype && extname){
+//       return cb(null,true);
+//     } else {
+//       cb('File type not allowed!');
+//     }
+// }
+
+//////////////////////////
+///Storage and Stream/////
+//////////////////////////
 
 
 //init stream
@@ -67,23 +86,6 @@ conn.once('open', () =>
 
   // all set!
 })
-
-var db = conn.db
-
-// Check File Type
-function checkFileType(file, cb){
-  // Allowed ext
-  const filetypes = /jpeg|jpg|png|gif|docx|pptx|ppt|doc|pdf/;
-  // Check ext
-  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-  // Check mime
-  const mimetype = filetypes.test(file.mimetype);
-  if(mimetype && extname){
-      return cb(null,true);
-    } else {
-      cb('File type not allowed!');
-    }
-}
 
 //init storage
 const storage = new GridFsStorage({
@@ -106,18 +108,14 @@ const storage = new GridFsStorage({
 });
 const upload = multer({ storage: storage });
 
-// app.use(mongodb(mongoUrl));
-
-// init gfs
-// let gfs;
-// conn.once("open", () => {
-//   // init stream
-//   gfs = new mongoose.mongo.GridFSBucket(conn.db, {
-//     bucketName: "uploads"
-//   });
-// });
 
 
+
+
+
+//////////
+//Routes//
+//////////
 
 
 
@@ -125,6 +123,8 @@ const upload = multer({ storage: storage });
 app.get('/', (req,res) => {
     res.render('upload');
 });
+
+
 
 app.post('/upload', upload.single('fileNameforUpload'), (req,res,next) => {
       //res.json({error_code:0,err_desc:null});
@@ -146,6 +146,39 @@ app.post('/upload', upload.single('fileNameforUpload'), (req,res,next) => {
                   })
 
       console.log('succ file!')
+});
+
+
+app.post('/deletefile/:filename', (req,res) =>{
+  gfs.files.remove({filename: req.params.filename}, function (err, res) {
+    if (err){
+      return handleError(err);
+    }
+      console.log('success');
+  });
+  res.render('upload')
+
+})
+
+app.get('/file/:filename', function(req, res){
+ /** First check if file exists */
+  gfs.files.find({filename: req.params.filename}).toArray(function(err, files){
+      if(!files || files.length === 0){
+          return res.status(404).json({
+              responseCode: 1,
+              responseMessage: "error"
+          });
+      }
+      /** create read stream */
+      var readstream = gfs.createReadStream({
+          filename: files[0].filename,
+          root: "files"
+      });
+      /** set the proper content type */
+      res.set('Content-Type', files[0].contentType)
+      /** return response */
+      return readstream.pipe(res);
+  });
 });
 
 app.get('/getfiles/:username', (req,res) =>{
@@ -193,49 +226,8 @@ app.get('/register', (req,res) =>{
               // bio: String
 })
 
-// app.post('/upload', upload.single('fileNameforUpload'), (req, res) =>{
-//       if(err){
-//            result.json({error_code:1,err_desc:err});
-//            return;
-//       }       
-//        //res.json({error_code:0,err_desc:null});
-//       res.send(req.file)
-//       global.originalname = req.file.filename
-//   });
-// });
 
-app.post('/deletefile/:filename', (req,res) =>{
-  gfs.files.remove({filename: req.params.filename}, function (err, res) {
-    if (err){
-      return handleError(err);
-    }
-      console.log('success');
-  });
-  res.render('upload')
-
-})
-
-app.get('/file/:filename', function(req, res){
- /** First check if file exists */
-  gfs.files.find({filename: req.params.filename}).toArray(function(err, files){
-      if(!files || files.length === 0){
-          return res.status(404).json({
-              responseCode: 1,
-              responseMessage: "error"
-          });
-      }
-      /** create read stream */
-      var readstream = gfs.createReadStream({
-          filename: files[0].filename,
-          root: "files"
-      });
-      /** set the proper content type */
-      res.set('Content-Type', files[0].contentType)
-      /** return response */
-      return readstream.pipe(res);
-  });
-});
-
+//Port
 
 
 var server = app.listen(3000, function () {
