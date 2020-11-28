@@ -204,6 +204,17 @@ app.get('/register', (req,res) =>{
 //   });
 // });
 
+app.post('/deletefile/:filename', (req,res) =>{
+  gfs.files.remove({filename: req.params.filename}, function (err, res) {
+    if (err){
+      return handleError(err);
+    }
+      console.log('success');
+  });
+  res.render('upload')
+
+})
+
 app.get('/file/:filename', function(req, res){
  /** First check if file exists */
   gfs.files.find({filename: req.params.filename}).toArray(function(err, files){

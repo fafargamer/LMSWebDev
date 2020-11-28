@@ -36,3 +36,4 @@ post.'/upload' = upload file
 post.'/register' = register
 get.'/file/:filename' = download file
 get.'/getfiles/:username' = cari semua file dengan parameter username
+post.'/deletefile/:filename' = delete file dengan parameter filename
