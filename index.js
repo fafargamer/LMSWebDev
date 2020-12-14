@@ -16,6 +16,10 @@ const methodOverride = require('method-override')
 var Binary = require('mongodb').Binary;
 var fs = require('fs');
 
+const passport = require('passport');
+const { authenticate } = require('passport')
+const LocalStrategy = require('passport-local').Strategy
+
 // const file = require('./models/file.js');
 
 
@@ -108,9 +112,13 @@ const storage = new GridFsStorage({
 });
 const upload = multer({ storage: storage });
 
+const saltRounds = 10;
 
 
-
+function isLoggedIn(req, res, next) {
+  if (req.isAuthenticated()) return next();
+  else res.redirect('/login');
+}
 
 
 //////////
@@ -121,7 +129,26 @@ const upload = multer({ storage: storage });
 
 
 app.get('/', (req,res) => {
-    res.render('upload');
+    res.render('login');
+});
+
+
+app.get('/user/myfiles', (req,res) => {
+  res.render('myfiles');
+});
+
+
+app.get('/user/profile', (req,res) => {
+  res.render('profile');
+});
+
+
+app.get('/materi', (req,res) => {
+  res.render('materi');
+});
+
+app.get('/register', (req,res) => {
+  res.render('register');
 });
 
 
@@ -149,14 +176,27 @@ app.post('/upload', upload.single('fileNameforUpload'), (req,res,next) => {
 });
 
 
-app.post('/deletefile/:filename', (req,res) =>{
-  gfs.files.remove({filename: req.params.filename}, function (err, res) {
+app.get('/deletefile/:filename', (req,res) =>{
+  gfs.remove({filename: req.params.filename, root: 'files'}, function (err, res) {
     if (err){
-      return handleError(err);
+      res.send(err);
     }
-      console.log('success');
+    else{
+      fileSchema.deleteOne({DBfilename: req.params.filename}, function(err, data){
+        if(err){
+            throw err;
+        }
+        else{
+            console.log('Data file berhasil dihapus');
+            console.log(data)
+            //res.redirect('/');
+        }
+        //console.log('success');
+      });
+    }  
   });
-  res.render('upload')
+  res.send('/')
+  console.log("File removed")
 
 })
 
@@ -192,7 +232,56 @@ app.get('/getfiles/:username', (req,res) =>{
 
 })
 
+
+
+
+
+
+
+
+
 app.get('/register', (req,res) =>{
+  res.render('register')
+})
+
+
+app.get('/login', (req,res) =>{
+  res.render('login')
+})
+
+// app.post('/testEncryption', (req, res) =>{
+//   var password = req.body.password
+//   bcrypt.hash(password, saltRounds, (err,hash) =>{
+//     if(err) res.send(err)
+//     res.send(hash)
+//   })
+// })
+
+
+//Authentication & Register 
+
+app.post('/login', (req,res) =>{
+  var hash = req.body.password
+  hash = bcrypt.hash(hash, saltRounds, (err,hash) =>{
+    if(err) res.send(err)
+  })
+  User.findOne({username: req.body.username,
+                password: hash}, (err, data) =>{
+                  if(err) res.render('login', {msg: err})
+                  else if(!data){
+                    res.status(400)
+                    res.render('login', {msg: 'user not found'})
+                  }
+                  else{
+                    delete res.password
+                    console.log(data)
+                    res.render('upload')
+                  }
+                })
+  //console.log(data)
+})
+
+app.post('/register', (req,res) =>{
   var username = req.body.username
   var email = req.body.email
   var namaLengkap = req.body.namaLengkap
@@ -200,22 +289,31 @@ app.get('/register', (req,res) =>{
   var akunFacebook = req.body.akunFacebook
   var akunInstagram = req.body.akunInstagram
   var akunYoutube = req.body.akunYoutube
-  var bio = req.body.bio
-        User({username: username,
-              email: email,
-              namaLengkap: namaLengkap,
-              institusi: institusi,
-              akunFacebook: akunFacebook,
-              akunInstagram: akunInstagram,
-              akunYoutube: akunYoutube,
-              bio: bio}).save(function(err, data){
-                if(err){
-                  res.send(err)
-                }
-                res.send(data)
-                console.log("succ")
-              })
-
+  var password = req.body.password
+  bcrypt.hash(password, saltRounds, (err,hash) =>{
+    if(err) res.send(err)
+    else
+    {
+      //res.send(hash)
+      User({username: username,
+        email: email,
+        namaLengkap: namaLengkap,
+        institusi: institusi,
+        akunFacebook: akunFacebook,
+        akunInstagram: akunInstagram,
+        akunYoutube: akunYoutube,
+        password: hash,
+        poin: 0}).save(function(err, data){
+          if(err){
+            res.send(err)
+          }
+          delete res.password
+          res.send(data)
+          console.log("succ")
+        })
+    }
+  })
+  //var bio = req.body.bio
               // username: String,
               // email: String,
               // namaLengkap: String,
@@ -225,6 +323,21 @@ app.get('/register', (req,res) =>{
               // akunYoutube: String,
               // bio: String
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //Port
