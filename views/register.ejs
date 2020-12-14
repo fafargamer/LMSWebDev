@@ -1,15 +1,31 @@
-<<<<<<< HEAD
-    <main>
-=======
-<head>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js" integrity="sha384-LtrjvnR4Twt/qOuYxE721u19sVFLVSA4hf/rRt6PrZTmiPltdZcI7q7PXQBYTKyf" crossorigin="anonymous"></script>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico" />
+    
+    <title>LMS </title>
 
-</head> 
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/e87ebb70cc.js" crossorigin="anonymous"></script>
+    <!-- Bootstrap core CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+      crossorigin="anonymous"
+    />
+    <!-- Custom styles for this template -->
+  </head>
    
    
    <main>
->>>>>>> 7b777e74c8b61c01d0c3eecdf895c9b71e78f53d
       <div class="container">
         <div
           class="row justify-content-center pt-3 shadow-sm rounded bg-white my-3"
@@ -17,6 +33,30 @@
           <div class="col-md-6">
             <h4 class="my-3"><b>Profil</b></h4>
             <form class="needs-validation" novalidate>
+              <div class="mb-3">
+                <label for="username"> <b>Username</b></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="Username"
+                  name="username"
+                  placeholder=""
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label for="password"><b>Password</b></label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="Password"
+                  name="password"
+                  placeholder=""
+                  required
+                />
+              </div>
+
               <div class="mb-3">
                 <label for="name"><b>Nama</b></label>
                 <input
@@ -37,30 +77,6 @@
                   class="form-control"
                   id="Email"
                   name="email"
-                  placeholder=""
-                  required
-                />
-              </div>
-
-              <div class="mb-3">
-                <label for="username"> <b>Username</b></label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="Username"
-                  name="username"
-                  placeholder=""
-                  required
-                />
-              </div>
-
-              <div class="mb-3">
-                <label for="password"><b>Password</b></label>
-                <input
-                  type="password"
-                  class="form-control"
-                  id="Password"
-                  name="password"
                   placeholder=""
                   required
                 />
@@ -120,7 +136,7 @@
                 class="btn btn-danger btn-block col-md-3 mb-5"
                 type="submit"
               >
-                Ubah Profil
+                Register
               </button>
             </form>
           </div>

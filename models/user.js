@@ -1,12 +1,13 @@
 const User = ({
     username: String,
     email: String,
+    password: String,
     namaLengkap: String,
     institusi: String,
     akunFacebook: String,
     akunInstagram: String,
     akunYoutube: String,
-    bio: String
+    poin: Number
 });
     
 module.exports = User;
