@@ -231,12 +231,15 @@ app.get('/download/:filename', function(req, res){
 
 app.get('')
 
-app.get('/getfiles/:username', (req,res) =>{
+app.get('/user/myfiles/:username', (req,res) =>{
   fileSchema.find({namaUser: req.params.username}, (err, result) =>{
     if(err){
       res.send(err)
     }else{
-      res.send(result)
+      //res.send(result)
+      //result.totalPoin = result.totalPoin
+
+      res.render('myfiles', {data:result})
     }
   })
 

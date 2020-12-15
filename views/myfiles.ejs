@@ -27,59 +27,58 @@
 
 <main>
 
-      <!----------------------navbar-->
+  <body class="bg-light">
+    <!--navbar-->
+    <div class="shadow-sm p-0">
+      <nav class="navbar navbar-expand navbar-light bg-white">
+        <div class="container">
+          <a class="navbar-brand" ><b>LMS</b></a>
 
-
-      <div class="shadow-sm p-0">
-        <nav class="navbar navbar-expand navbar-light bg-white">
-          <div class="container">
-            <a class="navbar-brand" ><b>LMS</b></a>
-  
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-         
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-         
-              <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                  <a class="nav-link" href="/home">Home</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">My File</a>
-                </li>
-              </ul>
-  
-            <ul class="navbar-nav ml-auto">
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link"
-                  href="#"
-                  id="menuProfil"
-                  role="button"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="true"
-                >
-                username
-                </a>
-               
-                <div
-                  class="dropdown-menu dropdown-menu-right"
-                  aria-labelledby="menuProfil"
-                >
-                  <a class="dropdown-item" href="#"> Ubah Profil </a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="#"> Sign Out </a>
-                </div>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+       
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+       
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="/">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/user/myfiles">My File</a>
               </li>
             </ul>
-            </div>
-          </div>
-        </nav>
-      </div>
 
-        <!---------------NavBar---->
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link"
+                href="#"
+                id="menuProfil"
+                role="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="true"
+              >
+              username
+              </a>
+             
+              <div
+                class="dropdown-menu dropdown-menu-right"
+                aria-labelledby="menuProfil"
+              >
+                <a class="dropdown-item" href="/user/profile"> Ubah Profil </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#"> Sign Out </a>
+              </div>
+            </li>
+          </ul>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <!------------NAV BAAR-->
 
 
 
@@ -147,12 +146,13 @@
 
 
                       <!--foreach-->
+                      <% data.forEach(function(item) { %>
                         <tr>
                           <td>no</td>
-                          <td>nama materi</td>
-                          <td>mata pelajaran</td>
+                          <td><%=item.filename%></td>
+                          <td><%=item.mataPelajaran%></td>
                           <td>tanggal unggah</td>
-                          <td>poin</td>
+                          <td><%=item.totalPoin%></td>
                           <td>
                             <a href="#detail">
                               <button class="btn btn-outline-danger px-3 py-1">
@@ -210,7 +210,7 @@
                                   <div class="modal-body">
                                     
                                       <h6 class="mt-3 mb-5" > Apakah anda yakin ingin menghapus materi?</h6>
-                                      <a href="#">
+                                      <a href="/deletefile/<%=item.DBfilename%>">
                                         <button
                                           type="button"
                                           class="btn btn-danger float-right ml-1"
@@ -234,16 +234,15 @@
                             <!--modal-->
                           </td>
                           <td>
-                            <a href="/<%=data%>" target="_blank">
+                            <a href="/download/<%=item.DBfilename%>" target="_blank">
                               <button class="btn btn-outline-danger px-2 py-1">
                                 <i class="fas fa-download"></i>
                               </button>
                             </a>
                           </td>
                         </tr>
-
-
-
+                        <% }); %>
+                        
 
                       <!--endforeach-->
                   </tbody>
