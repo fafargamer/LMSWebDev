@@ -3,7 +3,8 @@ const fileSchema = ({
     DBfilename: String,
     namaUser: String,
     mataPelajaran: String,
-    rating: Number, 
+    totalPoin: Number,
+    jumlahrating: Number, 
     desc: String 
 }); 
   

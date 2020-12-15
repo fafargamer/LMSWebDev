@@ -7,7 +7,8 @@ const User = ({
     akunFacebook: String,
     akunInstagram: String,
     akunYoutube: String,
-    poin: Number
+    poin: Number,
+    jumlahFile: Number
 });
     
 module.exports = User;

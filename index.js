@@ -23,7 +23,7 @@ const LocalStrategy = require('passport-local').Strategy
 // const file = require('./models/file.js');
 
 
-
+const PORT = process.env.PORT || 3000;
 const app = express();
 
 app.set('views', path.join(__dirname, 'views'));
@@ -200,7 +200,7 @@ app.get('/deletefile/:filename', (req,res) =>{
 
 })
 
-app.get('/file/:filename', function(req, res){
+app.get('/download/:filename', function(req, res){
  /** First check if file exists */
   gfs.files.find({filename: req.params.filename}).toArray(function(err, files){
       if(!files || files.length === 0){
@@ -220,6 +220,8 @@ app.get('/file/:filename', function(req, res){
       return readstream.pipe(res);
   });
 });
+
+app.get('')
 
 app.get('/getfiles/:username', (req,res) =>{
   fileSchema.find({namaUser: req.params.username}, (err, result) =>{
@@ -281,6 +283,33 @@ app.post('/login', (req,res) =>{
   //console.log(data)
 })
 
+app.post('/file/poin/:filename', (req,res,next) =>{
+  fileSchema.findOne({filename: req.params.filename}, (err, data) =>{
+    if(err) res.send(err)
+
+    else if(!data){
+      res.send('file sudah tidak ada')
+    }
+    else{
+      let poin = data.totalPoin
+      let jumlahRating = data.jumlahrating
+      jumlahRating = jumlahRating + 1
+      poin = (poin + req.body.poin)/jumlahRating
+      fileSchema.updateOne({filename: req.params.filename}, 
+                          {$set: {totalPoin: poin, 
+                                  jumlahRating: jumlahRating}}
+                                  , (err, result) =>{
+
+                                    if(err) res.send(err)
+                                    else{
+                                      res.send(result)
+                                    }
+                                  })
+    }
+  })
+
+})
+
 app.post('/register', (req,res) =>{
   var username = req.body.username
   var email = req.body.email
@@ -303,7 +332,8 @@ app.post('/register', (req,res) =>{
         akunInstagram: akunInstagram,
         akunYoutube: akunYoutube,
         password: hash,
-        poin: 0}).save(function(err, data){
+        poin: 0,
+        jumlahFile: 0}).save(function(err, data){
           if(err){
             res.send(err)
           }
@@ -343,7 +373,7 @@ app.post('/register', (req,res) =>{
 //Port
 
 
-var server = app.listen(3000, function () {
+var server = app.listen(PORT, function () {
     var port = server.address().port;
     console.log("Express is working on port " + port);
   });
