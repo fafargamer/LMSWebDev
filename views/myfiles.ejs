@@ -146,12 +146,12 @@
 
 
                       <!--foreach-->
-                      <% data.forEach(function(item) { %>
+                      <% data.forEach(function(item, i) { %>
                         <tr>
-                          <td>no</td>
+                          <td><%=(i+1)%></td>
                           <td><%=item.filename%></td>
                           <td><%=item.mataPelajaran%></td>
-                          <td>tanggal unggah</td>
+                          <td><%=item.tanggalUnggah%></td>
                           <td><%=item.totalPoin%></td>
                           <td>
                             <a href="#detail">
@@ -253,3 +253,4 @@
         </div>
       </div>
 </main>
+

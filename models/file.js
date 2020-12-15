@@ -4,7 +4,8 @@ const fileSchema = ({
     namaUser: String,
     mataPelajaran: String,
     totalPoin: Number,
-    jumlahrating: Number, 
+    jumlahrating: Number,
+    tanggalUnggah: Date, 
     desc: String 
 }); 
   

@@ -168,11 +168,13 @@ app.post('/user/upload', upload.single('fileNameforUpload'), (req,res,next) => {
       var dbFilename = originalname
       var fileDesc = req.body.filedescription
       var namaUser = "TestUser"
+      let newDate = new Date();
       //res.redirect('/fileMeta')
       fileSchema({filename: fileName,
                   desc: fileDesc,
                   namaUser: namaUser,
-                  DBfilename: dbFilename}).save(function(err, data){
+                  DBfilename: dbFilename,
+                  tanggalUnggah: newDate}).save(function(err, data){
                     if(err){
                       res.send(err)
                     }

@@ -16,7 +16,7 @@
         <a target="_blank" href="https://getform.io?ref=codepenHTML" class="mt-3 d-flex">Getform.io |  Get your free endpoint now</a>
         <h1>Getform.io HTML Form Example with File Upload</h1>
         <%= typeof msg != 'undefined' ? msg : '' %>
-        <form accept-charset="UTF-8" action="/upload" method="POST" enctype="multipart/form-data">
+        <form accept-charset="UTF-8" action="/user/upload" method="POST" enctype="multipart/form-data">
           <div class="form-group">
             <label for="filename">File name</label>
             <input type="text" name="filename" class="form-control" id="filename" placeholder="Enter the file name" required="required">
