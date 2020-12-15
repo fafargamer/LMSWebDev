@@ -18,72 +18,52 @@
         
         <div class="row justify-content-center pt-1 shadow-sm rounded bg-white">
           <div class="col">
-            <div class="row py-2">
-              <div class="col-md-6 col-sm-12">
-                <form class="form-inline mt-2" action="carimateri" method="post">
-                  <input
-                    class="form-control col-sm-8"
-                    type="search"
-                    placeholder="Cari Materi"
-                    aria-label="Search"
-                    name="keyword"
-                  />
-                  <button
-                    class="btn btn-danger my-2 col-md-2 col-sm-12"
-                    type="submit"
-                  >
-                    Cari
-                  </button>
-                </form>
-              </div>        
-            </div>
-          </div>
-        </div>
-
-        <div class="row p-3">
-          <div class="table-responsive">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>No</th>
-                  <th>Nama Materi</th>
-                  <th>Mata Pelajaran</th>
-                  <th>Tanggal Unggah</th>
-                  <th>Poin</th>
-                  <th>Author</th>
-                  
-                  <th>Aksi</th>
-                  <th><!--button download--></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="border">
-                  <!-- <?php var_dump($data) ?> -->
-                  <!--foreach-->
+            <div class="row p-3">
+              <div class="table-responsive">
+                <table class="table table-striped">
+                  <thead>
                     <tr>
-                      <td>no</td>
-                      <td>nama</td>
-                      <td>mata pelajaran</td>
-                      <td>tanggal unggah</td>
-                      <td>poin</td>
-                      <td>author</td>             
-                  <td>
-                    <a href="#">
-                      <button class="btn btn-outline-danger px-3 py-1">
-                        Detail
-                      </button>
-                    </a>
-                  </td>
-                  <td>
-                    <button class="btn btn-outline-danger px-2 py-1">
-                      <i class="fas fa-download"></i>
-                    </button>
-                  </td>
-                </tr>
-                <!--endforeach-->
-              </tbody>
-            </table>
-          </div>
+                      <th>No</th>
+                      <th>Nama Materi</th>
+                      <th>Mata Pelajaran</th>
+                      <th>Tanggal Unggah</th>
+                      <th>Poin</th>
+                      <th>Author</th>
+                      
+                      <th>Aksi</th>
+                      <th><!--button download--></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="border">
+                      <!-- <?php var_dump($data) ?> -->
+                      <!--foreach-->
+                        <tr>
+                          <td>no</td>
+                          <td>nama</td>
+                          <td>mata pelajaran</td>
+                          <td>tanggal unggah</td>
+                          <td>poin</td>
+                          <td>author</td>             
+                      <td>
+                        <a href="#">
+                          <button class="btn btn-outline-danger px-3 py-1">
+                            Detail
+                          </button>
+                        </a>
+                      </td>
+                      <td>
+                        <button class="btn btn-outline-danger px-2 py-1">
+                          <i class="fas fa-download"></i>
+                        </button>
+                      </td>
+                    </tr>
+                    <!--endforeach-->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>          
         </div>
       </div>
     </main>
