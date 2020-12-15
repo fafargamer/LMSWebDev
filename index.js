@@ -129,12 +129,13 @@ function isLoggedIn(req, res, next) {
 
 
 app.get('/', (req,res) => {
-    res.render('login');
+    res.redirect('/home');
 });
 
 
 app.get('/user/myfiles', (req,res) => {
-  res.render('myfiles');
+  var data = "testOfFile"
+  res.render('myfiles', {data: data});
 });
 
 
@@ -151,9 +152,15 @@ app.get('/register', (req,res) => {
   res.render('register');
 });
 
+app.get('/user/upload', (req,res) =>{
+  res.render('upload')
+})
 
+app.get('/home', (req,res) =>{
+  res.render('home')
+})
 
-app.post('/upload', upload.single('fileNameforUpload'), (req,res,next) => {
+app.post('/user/upload', upload.single('fileNameforUpload'), (req,res,next) => {
       //res.json({error_code:0,err_desc:null});
       global.originalname = req.file.filename
       var fileName = req.body.filename
