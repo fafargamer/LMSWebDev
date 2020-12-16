@@ -41,57 +41,59 @@
   <main>
 
     <body class="bg-light">
-      <!--navbar-->
-      <div class="shadow-sm p-0">
-        <nav class="navbar navbar-expand navbar-light bg-white">
-          <div class="container">
-            <a class="navbar-brand" ><b>Mateshare</b></a>
+      <body class="bg-light">
+        <!--navbar-->
+        <div class="shadow-sm p-0">
+          <nav class="navbar navbar-expand navbar-light bg-white">
+            <div class="container">
+              <a class="navbar-brand" ><b>LMS</b></a>
     
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-         
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-         
-              <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                  <a class="nav-link" href="/home">Home</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/user/myfiles/<%=data.username%>">My File</a>
+              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+           
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+           
+                <ul class="navbar-nav mr-auto">
+                  <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/user/myfiles">My File</a>
+                  </li>
+                </ul>
+    
+              <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown">
+                  <a
+                    class="nav-link"
+                    href="#"
+                    id="menuProfil"
+                    role="button"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="true"
+                  >
+                  <%=data.username%>
+                  </a>
+                 
+                  <div
+                    class="dropdown-menu dropdown-menu-right"
+                    aria-labelledby="menuProfil"
+                  >
+                    <a class="dropdown-item" href="/user/profile"> Ubah Profil </a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="/logout"> Sign Out </a>
+                  </div>
                 </li>
               </ul>
-    
-            <ul class="navbar-nav ml-auto">
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link"
-                  href="#"
-                  id="menuProfil"
-                  role="button"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="true"
-                >
-                <%=data.username%>
-                </a>
-               
-                <div
-                  class="dropdown-menu dropdown-menu-right"
-                  aria-labelledby="menuProfil"
-                >
-                  <a class="dropdown-item" href="/user/profile/<%=data.username%>"> Ubah Profil </a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="/"> Sign Out </a>
-                </div>
-              </li>
-            </ul>
+              </div>
             </div>
-          </div>
-        </nav>
-      </div>
+          </nav>
+        </div>
     
-      <!------------NAV BAAR-->
+        <!------------NAV BAAR-->
+        
 
 
     <div class="container">

@@ -39,26 +39,26 @@
                 <div class="row pt-3">
                     <div class="col">
                         <h2>
-                            <b>Judul Materi</b>
+                            <b><%=data.filename%></b>
                         </h2>
                     </div>
                     <div class="col" style="text-align: right;">
                         <h2>
-                            <b>Poin: 1234567890</b>
+                            <b><%=data.poin%></b>
                         </h2>
                     </div>
                 </div>
                 <div class="row pl-3">
-                    <p><i>Diunggah pada D M Y<br>Oleh Author</i></p>
+                    <p><i>Diunggah pada <%=data.tanggalUnggah%><br>Oleh <%=data.namaUser%></i></p>
                 </div>
                 <div class="row p-3">
                     <div class="col" style="word-wrap: break-word;word-break: normal;">
-                        <p>Deskripsiasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfnklajdskfjklajskdjfkalkjsdkfjajlsjflajsdkjflajsdlkfjalksjdlkfjalksjdflajskdjflakjsdfjalksjflajsdljfklajsdfjlasjflajskdjf</p>
+                        <p><%=data.desc%></p>
                     </div>
                 </div>
                 <div class="row p-3">
                     <div class="col-md col-sm-12">
-                        <a href="#back">
+                        <a href="/user/myfiles">
                             <button
                                 type="button"
                                 class="btn btn-danger col-sm-12 float-left ml-0  mb-2"
@@ -70,7 +70,7 @@
                         </a>
                     </div>
                     <div class="col-md-10 col-sm-12">
-                        <a href="#DownloadMateri" target="_blank">
+                        <a href="/download/<%=data.DBfilename%>" target="_blank">
                             <button
                                 type="button"
                                 class="btn btn-danger col-md-3 col-sm-12 float-right ml-1 mb-2"
@@ -120,7 +120,7 @@
                                     <div class="modal-body">
                                         
                                         <h6 class="mt-3 mb-5" > Apakah anda yakin ingin menghapus materi?</h6>
-                                        <a href="#hapus">
+                                        <a href="/deletefile/<%=data.DBfilename%>">
                                             <button
                                             type="button"
                                             class="btn btn-danger float-right ml-1"

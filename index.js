@@ -169,14 +169,25 @@ function isLoggedIn(req, res, next) {
 //////////
 
 
-app.get('/user/myfiles', (req,res) => {
-  var data = "testOfFile"
-  res.render('myfiles', {data: data});
-});
+// app.get('/user/myfiles', (req,res) => {
+//   var data = "testOfFile"
+//   res.render('myfiles', {data: data});
+// });
 
 
-app.get('/user/profile', (req,res) => {
-  res.render('profile');
+app.get('/user/profile', isLoggedIn, (req,res) => {
+  User.findOne({username: req.user.username}, (err, data) => {
+    if(err) res.send(err)
+    else if(!data){
+      res.send('user tidak ditemukan')
+    }
+    else{
+      delete res.password
+      console.log(data)
+      res.render('profile', {data:data});
+    }
+  })
+
 });
 
 
@@ -184,16 +195,8 @@ app.get('/materi', (req,res) => {
   res.render('materi');
 });
 
-app.get('/user/upload/:username', (req,res) =>{
-  User.findOne({username: req.params.username}, (err,data) => {
-    if(err) res.send(err)
-    else if(!data){
-      res.send('username ga ada')
-    }
-    else{
-      res.render('upload', {data: data})
-    }
-  })
+app.get('/user/upload/', isLoggedIn, (req,res) =>{
+      res.render('addfile')
 })
 
 app.get('/', isLoggedIn, (req,res) =>{
@@ -201,13 +204,13 @@ app.get('/', isLoggedIn, (req,res) =>{
   res.render('home',{data:req.user, rataPoin:rataPoin})
 })
 
-app.post('/user/upload', upload.single('fileNameforUpload'), (req,res,next) => {
+app.post('/user/upload', upload.single('fileNameforUpload'), isLoggedIn, (req,res,next) => {
       //res.json({error_code:0,err_desc:null});
       global.originalname = req.file.filename
-      var fileName = req.body.filename
+      var fileName = req.body.NamaFile
       var dbFilename = originalname
-      var fileDesc = req.body.filedescription
-      var namaUser = req.body.username
+      var fileDesc = req.body.Deskripsi
+      var namaUser = req.user.username
       var mataPelajaran = req.body.mapel.toLowerCase()
       let newDate = new Date();
       //res.redirect('/fileMeta')
@@ -229,7 +232,7 @@ app.post('/user/upload', upload.single('fileNameforUpload'), (req,res,next) => {
               //res.send(data)
               console.log("succ")
               console.log('succ file!')
-              res.redirect('/user/myfiles/' + data.namaUser)
+              res.redirect('/user/myfiles/')
             })
 
         }
@@ -238,20 +241,7 @@ app.post('/user/upload', upload.single('fileNameforUpload'), (req,res,next) => {
 
 });
 
-app.get('/detailBukanAuthor/:filename', (req,res) => {
-  fileSchema.findOne({filename: req.params.filename}, (err,datafile) =>{
-    if(err){
-      res.send(err)
-    }
-    else if(!datafile){
-      res.send("file tidak ada")
-    }
-    else{
-      res.render('detailBukanAuthor', {data: datafile})
-    }
-  })
 
-})
 
 // app.get('/materi/carimateri', (req,res) => {
 //   var search = req.body.keyword
@@ -278,15 +268,21 @@ app.get('/deletefile/:filename', (req,res) =>{
         else{
             console.log('Data file berhasil dihapus');
             console.log(data)
+            //data.redirect('/user/myfiles/')
             //res.redirect('/');
         }
-        //console.log('success');
       });
-    }  
+    console.log('success');  
+    }
+  
   });
-  res.send('/')
-  console.log("File removed")
+  res.redirect('/reload/myFiles')    
+  //console.log("File removed")
 
+})
+
+app.get('/reload/myFiles', (req,res) => {
+  res.redirect('/user/myfiles')  
 })
 
 app.get('/materi/:mapel', (req,res) => {
@@ -325,31 +321,47 @@ app.get('/download/:filename', function(req, res){
   });
 });
 
-app.get('/user/myfiles/:username', (req,res) =>{
-  User.findOne({username: req.params.username}, (err,data) => {
-    if(err) res.send(err)
-    else if(!data){
-      res.send("user ga ada")
-    }
-    else{
-      fileSchema.find({namaUser: req.params.username}, (err, result) =>{
+app.get('/user/myfiles', isLoggedIn, (req,res) =>{
+      fileSchema.find({namaUser: req.user.username}, (err, result) =>{
         if(err){
           res.send(err)
         }else{
           //res.send(result)
           //result.totalPoin = result.totalPoin
-  
-          res.render('myfiles', {data:result, userData: data})
+          //res.send(result)
+          res.render('myfiles', {data:result, userData: req.user})
         }
       })
-    }
-  })
-
-
 })
 
 
+app.get('/detailBukanAuthor/:filename', (req,res) => {
+  fileSchema.findOne({filename: req.params.filename}, (err,datafile) =>{
+    if(err){
+      res.send(err)
+    }
+    else if(!datafile){
+      res.send("file tidak ada")
+    }
+    else{
+      res.render('detailBukanAuthor', {data: datafile})
+    }
+  })
 
+})
+
+app.get('/detailAuthor/:filename', isLoggedIn, (req,res) => {
+  fileSchema.findOne({filename:req.params.filename}, (err, data) =>{
+    if(err) res.send(err)
+    else if(!data){
+      res.send("file sudah tidak ada")
+    }
+    else{
+      res.render('detailAuthor', {data:data})
+    }
+
+  })
+})
 
 
 
@@ -433,6 +445,7 @@ app.post('/register', (req,res) =>{
         var institusi = req.body.institusi
         var akunFacebook = req.body.akunFacebook
         var akunInstagram = req.body.instagram
+        var akunFacebook = req.body.facebook
         var akunYoutube = req.body.youtube
         var password = req.body.password
             User({username: username,
@@ -441,6 +454,7 @@ app.post('/register', (req,res) =>{
               institusi: institusi,
               akunFacebook: akunFacebook,
               akunInstagram: akunInstagram,
+              akunFacebook: akunFacebook,
               akunYoutube: akunYoutube,
               password: password,
               poin: 0,
@@ -453,6 +467,39 @@ app.post('/register', (req,res) =>{
                 console.log("succ")
               })
 })
+
+app.post('/user/updateProfile', isLoggedIn, (req,res) => {
+    var username = req.body.username
+    var nama = req.body.nama
+    var email = req.body.email
+    var institusi = req.body.institusi
+    var instagram = req.body.instagram
+    var facebook = req.body.facebook
+    var youtube = req.body.youtube
+    User.updateOne({"username": username}, {"$set": {
+      "username": username, 
+      "email": email, 
+      "namaLengkap": nama, 
+      "institusi": institusi, 
+      "akunFacebook": facebook,
+      "akunInstagram": instagram,
+      "akunYoutube": youtube}}, (err, data) =>{
+        if(err) res.send(err)
+        else if(!data){
+          res.send('user tidak ditemukan')
+        }
+        else{
+          console.log(data)
+          res.redirect('/')
+        }
+    })
+
+})
+
+app.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/');
+});
 
 
 

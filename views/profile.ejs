@@ -26,57 +26,59 @@
 
    
 <body class="bg-light">
-  <!--navbar-->
-  <div class="shadow-sm p-0">
-    <nav class="navbar navbar-expand navbar-light bg-white">
-      <div class="container">
-        <a class="navbar-brand" ><b>LMS</b></a>
+  <body class="bg-light">
+    <!--navbar-->
+    <div class="shadow-sm p-0">
+      <nav class="navbar navbar-expand navbar-light bg-white">
+        <div class="container">
+          <a class="navbar-brand" ><b>LMS</b></a>
 
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-     
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-     
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="/">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/user/myfiles">My File</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+       
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+       
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="/">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/user/myfiles">My File</a>
+              </li>
+            </ul>
+
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link"
+                href="#"
+                id="menuProfil"
+                role="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="true"
+              >
+              <%=data.username%>
+              </a>
+             
+              <div
+                class="dropdown-menu dropdown-menu-right"
+                aria-labelledby="menuProfil"
+              >
+                <a class="dropdown-item" href="/user/profile"> Ubah Profil </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/logout"> Sign Out </a>
+              </div>
             </li>
           </ul>
-
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item dropdown">
-            <a
-              class="nav-link"
-              href="#"
-              id="menuProfil"
-              role="button"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="true"
-            >
-            username
-            </a>
-           
-            <div
-              class="dropdown-menu dropdown-menu-right"
-              aria-labelledby="menuProfil"
-            >
-              <a class="dropdown-item" href="/user/profile"> Ubah Profil </a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#"> Sign Out </a>
-            </div>
-          </li>
-        </ul>
+          </div>
         </div>
-      </div>
-    </nav>
-  </div>
+      </nav>
+    </div>
 
-  <!------------NAV BAAR-->
+    <!------------NAV BAAR-->
+    
    <main>
       <div class="container">
         <div
@@ -84,7 +86,7 @@
         >
           <div class="col-md-6">
             <h4 class="my-3"><b>Profil</b></h4>
-            <form class="needs-validation" novalidate>
+            <form class="needs-validation" action="/user/updateProfile" method="POST" novalidate>
               <div class="mb-3">
                 <label for="name"><b>Nama</b></label>
                 <input
@@ -93,7 +95,7 @@
                   id="Nama"
                   name="nama"
                   placeholder=""
-                  value=""
+                  value="<%=data.namaLengkap%>"
                   required
                 />
               </div>
@@ -105,7 +107,7 @@
                   class="form-control"
                   id="Email"
                   name="email"
-                  placeholder=""
+                  value="<%=data.email%>"
                   required
                 />
               </div>
@@ -117,22 +119,22 @@
                   class="form-control"
                   id="Username"
                   name="username"
-                  placeholder=""
+                  value="<%=data.username%>"
                   required
                 />
               </div>
 
-              <div class="mb-3">
+              <!-- <div class="mb-3">
                 <label for="password"><b>Password</b></label>
                 <input
                   type="password"
                   class="form-control"
                   id="Password"
                   name="password"
-                  placeholder=""
+                  value=""
                   required
                 />
-              </div>
+              </div> -->
 
               <div class="mb-3">
                 <label for="institusi"><b>Institusi</b></label>
@@ -141,7 +143,7 @@
                   class="form-control"
                   id="Institusi"
                   name="institusi"
-                  placeholder=""
+                  value="<%=data.institusi%>"
                   required
                 />
               </div>
@@ -153,7 +155,7 @@
                   class="form-control"
                   id="Instagram"
                   name="instagram"
-                  placeholder=""
+                  value="<%=data.akunInstagram%>"
                   required
                 />
               </div>
@@ -165,7 +167,7 @@
                   class="form-control"
                   id="Facebook"
                   name="facebook"
-                  placeholder=""
+                  value="<%=data.akunFacebook%>"
                   required
                 />
               </div>
@@ -177,7 +179,7 @@
                   class="form-control"
                   id="Youtube"
                   name="youtube"
-                  placeholder=""
+                  value="<%=data.akunYoutube%>"
                   required
                 />
               </div>
