@@ -15,10 +15,13 @@ const Grid = require('gridfs-stream');
 const methodOverride = require('method-override')
 var Binary = require('mongodb').Binary;
 var fs = require('fs');
-
-const passport = require('passport');
+const passport = require('passport')
 const { authenticate } = require('passport')
-const LocalStrategy = require('passport-local').Strategy
+const LocalStrategy = require('passport-local').Strategy;
+const session = require('express-session')
+//const passportLocalMongoose = require('passport-local-mongoose');
+
+
 
 // const file = require('./models/file.js');
 
@@ -32,6 +35,14 @@ app.use(express.static("public"));
 app.use(methodOverride('_method'))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
+app.use(session({
+  secret: "C4nY0uR34dTh1S",
+  resave: true,
+  saveUninitialized: true }));
+app.use(passport.initialize());
+app.use(passport.session());
+
+
 // app.use(uploadController)
 
 // var file_path = './test.txt';
@@ -116,6 +127,37 @@ const upload = multer({ storage: storage });
 const saltRounds = 10;
 
 
+
+
+/////////////////////////
+/////Authentication//////
+/////////////////////////
+/* PASSPORT LOCAL AUTHENTICATION */
+
+// ----------------------- PASSPORT -----------------------
+passport.serializeUser(function (user, done) {
+  done(null, user);
+});
+passport.deserializeUser(function (user, done) {
+  done(null, user);
+});
+passport.use('login', new LocalStrategy(
+  {passReqToCallback: true},
+  function (req, username, password, done){
+      User.findOne({username: username, password: password}, function(err, result){
+          if(err) return done(err)
+          if(!result){
+              return done(null,false)
+          }
+          else {
+              delete result.password
+              return done(null, result)
+          }
+      })
+  })
+);
+
+
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) return next();
   else res.redirect('/login');
@@ -125,13 +167,6 @@ function isLoggedIn(req, res, next) {
 //////////
 //Routes//
 //////////
-
-
-
-
-app.get('/', (req,res) => {
-    res.redirect('/home');
-});
 
 
 app.get('/user/myfiles', (req,res) => {
@@ -149,16 +184,21 @@ app.get('/materi', (req,res) => {
   res.render('materi');
 });
 
-app.get('/register', (req,res) => {
-  res.render('register');
-});
-
-app.get('/user/upload', (req,res) =>{
-  res.render('upload')
+app.get('/user/upload/:username', (req,res) =>{
+  User.findOne({username: req.params.username}, (err,data) => {
+    if(err) res.send(err)
+    else if(!data){
+      res.send('username ga ada')
+    }
+    else{
+      res.render('upload', {data: data})
+    }
+  })
 })
 
-app.get('/home', (req,res) =>{
-  res.render('home')
+app.get('/', isLoggedIn, (req,res) =>{
+  let rataPoin = req.user.poin/req.user.jumlahFile
+  res.render('home',{data:req.user, rataPoin:rataPoin})
 })
 
 app.post('/user/upload', upload.single('fileNameforUpload'), (req,res,next) => {
@@ -167,23 +207,62 @@ app.post('/user/upload', upload.single('fileNameforUpload'), (req,res,next) => {
       var fileName = req.body.filename
       var dbFilename = originalname
       var fileDesc = req.body.filedescription
-      var namaUser = "TestUser"
+      var namaUser = req.body.username
+      var mataPelajaran = req.body.mapel.toLowerCase()
       let newDate = new Date();
       //res.redirect('/fileMeta')
-      fileSchema({filename: fileName,
-                  desc: fileDesc,
-                  namaUser: namaUser,
-                  DBfilename: dbFilename,
-                  tanggalUnggah: newDate}).save(function(err, data){
-                    if(err){
-                      res.send(err)
-                    }
-                    res.send(data)
-                    console.log("succ")
-                  })
+      fileSchema.findOne({filename: fileName}, (err,result) =>{
+        if(err) res.send(err)
+        else if(result){
+          res.render('upload', {msg: "Nama file yang sama sudah ada"})
+        }
+        else{
+          fileSchema({filename: fileName,
+            desc: fileDesc,
+            namaUser: namaUser,
+            DBfilename: dbFilename,
+            tanggalUnggah: newDate,
+            mataPelajaran: mataPelajaran}).save(function(err, data){
+              if(err){
+                res.send(err)
+              }
+              //res.send(data)
+              console.log("succ")
+              console.log('succ file!')
+              res.redirect('/user/myfiles/' + data.namaUser)
+            })
 
-      console.log('succ file!')
+        }
+
+      })
+
 });
+
+app.get('/detailBukanAuthor/:filename', (req,res) => {
+  fileSchema.findOne({filename: req.params.filename}, (err,datafile) =>{
+    if(err){
+      res.send(err)
+    }
+    else if(!datafile){
+      res.send("file tidak ada")
+    }
+    else{
+      res.render('detailBukanAuthor', {data: datafile})
+    }
+  })
+
+})
+
+// app.get('/materi/carimateri', (req,res) => {
+//   var search = req.body.keyword
+//   fileSchema.find({$or:[{"filename": /search/i }, {"namaUser":/search/i}]}, (err, result) =>{
+//     if(err) res.send(err)
+//     else {
+//       res.render('materi')
+//     }
+//   })
+
+// })
 
 
 app.get('/deletefile/:filename', (req,res) =>{
@@ -210,6 +289,21 @@ app.get('/deletefile/:filename', (req,res) =>{
 
 })
 
+app.get('/materi/:mapel', (req,res) => {
+  fileSchema.find({mataPelajaran: req.params.mapel}, (err, result) =>{
+    if(err){
+      res.send(err)
+    }else{
+      //res.send(result)
+      //result.totalPoin = result.totalPoin
+
+      res.render('materi', {data:result})
+    }
+  })
+
+})
+
+
 app.get('/download/:filename', function(req, res){
  /** First check if file exists */
   gfs.files.find({filename: req.params.filename}).toArray(function(err, files){
@@ -231,19 +325,26 @@ app.get('/download/:filename', function(req, res){
   });
 });
 
-app.get('')
-
 app.get('/user/myfiles/:username', (req,res) =>{
-  fileSchema.find({namaUser: req.params.username}, (err, result) =>{
-    if(err){
-      res.send(err)
-    }else{
-      //res.send(result)
-      //result.totalPoin = result.totalPoin
-
-      res.render('myfiles', {data:result})
+  User.findOne({username: req.params.username}, (err,data) => {
+    if(err) res.send(err)
+    else if(!data){
+      res.send("user ga ada")
+    }
+    else{
+      fileSchema.find({namaUser: req.params.username}, (err, result) =>{
+        if(err){
+          res.send(err)
+        }else{
+          //res.send(result)
+          //result.totalPoin = result.totalPoin
+  
+          res.render('myfiles', {data:result, userData: data})
+        }
+      })
     }
   })
+
 
 })
 
@@ -275,26 +376,28 @@ app.get('/login', (req,res) =>{
 
 //Authentication & Register 
 
-app.post('/login', (req,res) =>{
-  var hash = req.body.password
-  hash = bcrypt.hash(hash, saltRounds, (err,hash) =>{
-    if(err) res.send(err)
-  })
-  User.findOne({username: req.body.username,
-                password: hash}, (err, data) =>{
-                  if(err) res.render('login', {msg: err})
-                  else if(!data){
-                    res.status(400)
-                    res.render('login', {msg: 'user not found'})
-                  }
-                  else{
-                    delete res.password
-                    console.log(data)
-                    res.render('upload')
-                  }
-                })
-  //console.log(data)
-})
+// app.post('/login', (req,res) =>{
+//   User.findOne({username: req.body.username,
+//                 password: req.body.password}, (err, data) =>{
+//                   if(err) res.render('login', {msg: err})
+//                   else if(!data){
+//                     res.status(400)
+//                     res.render('login', {msg: 'user not found'})
+//                   }
+//                   else{
+//                     delete res.password
+//                     console.log(data)
+//                     let rataPoin = data.poin/data.jumlahFile
+//                     res.render('home', {data: data, rataPoin:rataPoin})
+//                   }
+//   //console.log(data)
+// })
+// })
+
+app.post('/login', passport.authenticate('login',{failureRedirect: '/login'}),
+  (req, res) => {
+    res.redirect('/');
+  });
 
 app.post('/file/poin/:filename', (req,res,next) =>{
   fileSchema.findOne({filename: req.params.filename}, (err, data) =>{
@@ -324,47 +427,31 @@ app.post('/file/poin/:filename', (req,res,next) =>{
 })
 
 app.post('/register', (req,res) =>{
-  var username = req.body.username
-  var email = req.body.email
-  var namaLengkap = req.body.namaLengkap
-  var institusi = req.body.institusi
-  var akunFacebook = req.body.akunFacebook
-  var akunInstagram = req.body.akunInstagram
-  var akunYoutube = req.body.akunYoutube
-  var password = req.body.password
-  bcrypt.hash(password, saltRounds, (err,hash) =>{
-    if(err) res.send(err)
-    else
-    {
-      //res.send(hash)
-      User({username: username,
-        email: email,
-        namaLengkap: namaLengkap,
-        institusi: institusi,
-        akunFacebook: akunFacebook,
-        akunInstagram: akunInstagram,
-        akunYoutube: akunYoutube,
-        password: hash,
-        poin: 0,
-        jumlahFile: 0}).save(function(err, data){
-          if(err){
-            res.send(err)
-          }
-          delete res.password
-          res.send(data)
-          console.log("succ")
-        })
-    }
-  })
-  //var bio = req.body.bio
-              // username: String,
-              // email: String,
-              // namaLengkap: String,
-              // institusi: String,
-              // akunFacebook: String,
-              // akunInstagram: String,
-              // akunYoutube: String,
-              // bio: String
+        var username = req.body.username
+        var email = req.body.email
+        var namaLengkap = req.body.nama
+        var institusi = req.body.institusi
+        var akunFacebook = req.body.akunFacebook
+        var akunInstagram = req.body.instagram
+        var akunYoutube = req.body.youtube
+        var password = req.body.password
+            User({username: username,
+              email: email,
+              namaLengkap: namaLengkap,
+              institusi: institusi,
+              akunFacebook: akunFacebook,
+              akunInstagram: akunInstagram,
+              akunYoutube: akunYoutube,
+              password: password,
+              poin: 0,
+              jumlahFile: 0}).save(function(err, data){
+                if(err){
+                  res.send(err)
+                }
+                delete res.password
+                res.render('login')
+                console.log("succ")
+              })
 })
 
 

@@ -1,15 +1,37 @@
-<head>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js" integrity="sha384-LtrjvnR4Twt/qOuYxE721u19sVFLVSA4hf/rRt6PrZTmiPltdZcI7q7PXQBYTKyf" crossorigin="anonymous"></script>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico" />
+    
+    <title>Mateshare </title>
 
-</head>  
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/e87ebb70cc.js" crossorigin="anonymous"></script>
+    <!-- Bootstrap core CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+      crossorigin="anonymous"
+    />
+    <!-- Custom styles for this template -->
+  </head>
+
+
     
 <body class="bg-light">
   <!--navbar-->
   <div class="shadow-sm p-0">
     <nav class="navbar navbar-expand navbar-light bg-white">
       <div class="container">
-        <a class="navbar-brand" ><b>LMS</b></a>
+        <a class="navbar-brand" ><b>Mateshare</b></a>
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -64,10 +86,10 @@
           </h3>
         </div>
         
-        <div class="row justify-content-center pt-1 shadow-sm rounded bg-white">
-          <div class="col">
-            <div class="row py-2">
-              <div class="col-md-6 col-sm-12">
+        <!-- <div class="row justify-content-center pt-1 shadow-sm rounded bg-white invisible">
+          <div class="col invisible">
+            <div class="row py-2 invisible">
+              <div class="col-md-6 col-sm-12 invisible">
                 <form class="form-inline mt-2" action="carimateri" method="post">
                   <input
                     class="form-control col-sm-8"
@@ -86,7 +108,7 @@
               </div>        
             </div>
           </div>
-        </div>
+        </div> -->
 
         <div class="row p-3">
           <div class="table-responsive">
@@ -106,28 +128,38 @@
               </thead>
               <tbody>
                 <tr class="border">
+
+
+
+
+                  <% data.forEach(function(item, i) { %>
                   <!-- <?php var_dump($data) ?> -->
                   <!--foreach-->
-                    <tr>
-                      <td>no</td>
-                      <td>nama</td>
-                      <td>mata pelajaran</td>
-                      <td>tanggal unggah</td>
-                      <td>poin</td>
-                      <td>author</td>             
+                    <tr>                   
+                      <td><%=(i+1)%></td>
+                      <td><%=item.filename%></td>
+                      <td><%=item.mataPelajaran%></td>
+                      <td><%=item.tanggalUnggah%></td>
+                      <td><%=item.totalPoin%></td>
+                      <td><%=item.namaUser%></td>
                   <td>
-                    <a href="#">
+                    <a href="/detailBukanAuthor/<%=item.filename%>">
                       <button class="btn btn-outline-danger px-3 py-1">
                         Detail
                       </button>
                     </a>
                   </td>
                   <td>
-                    <button class="btn btn-outline-danger px-2 py-1">
-                      <i class="fas fa-download"></i>
-                    </button>
+                    <a href="/download/<%=item.DBfilename%>" target="_blank">
+                      <button class="btn btn-outline-danger px-2 py-1">
+                        <i class="fas fa-download"></i>
+                      </button>
+                    </a>
                   </td>
                 </tr>
+                <% }); %>
+
+
                 <!--endforeach-->
               </tbody>
             </table>
@@ -135,3 +167,27 @@
         </div>
       </div>
     </main>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+      integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+      integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
