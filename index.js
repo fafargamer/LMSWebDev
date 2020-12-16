@@ -190,11 +190,6 @@ app.get('/user/profile', isLoggedIn, (req,res) => {
 
 });
 
-
-app.get('/materi', (req,res) => {
-  res.render('materi');
-});
-
 app.get('/user/upload/', isLoggedIn, (req,res) =>{
       res.render('addfile')
 })
@@ -285,7 +280,7 @@ app.get('/reload/myFiles', (req,res) => {
   res.redirect('/user/myfiles')  
 })
 
-app.get('/materi/:mapel', (req,res) => {
+app.get('/materi/:mapel', isLoggedIn, (req,res) => {
   fileSchema.find({mataPelajaran: req.params.mapel}, (err, result) =>{
     if(err){
       res.send(err)
@@ -293,7 +288,7 @@ app.get('/materi/:mapel', (req,res) => {
       //res.send(result)
       //result.totalPoin = result.totalPoin
 
-      res.render('materi', {data:result})
+      res.render('materi', {data:result, dataUser:req.user})
     }
   })
 
